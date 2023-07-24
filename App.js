@@ -1,12 +1,39 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import * as Updates from 'expo-updates';
+import { useEffect } from 'react';
+import { WebView } from 'react-native-webview';
 export default function App() {
+  useEffect(() => {
+    const checkForUpdates = async () => {
+      try {
+        const update = await Updates.checkForUpdateAsync();
+        if (update.isAvailable) {
+          setStatus({ ...status, update: true, fetching: true })
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    if (!__DEV__) {
+      checkForUpdates();
+    }
+  }, [])
+
+  const INJECTEDJAVASCRIPT = `const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `;
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={{ flex: 1, paddingTop: 50 }}>
+      <WebView source={{ uri: 'https://mr-options.vercel.app/' }}
+        originWhitelist={["*"]}
+        scalesPageToFit={true}
+        injectedJavaScript={INJECTEDJAVASCRIPT}
+        scrollEnabled={false}
+      />
+    </SafeAreaView>
   );
 }
 
