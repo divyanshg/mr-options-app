@@ -3,7 +3,11 @@ import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import * as Updates from 'expo-updates';
 import { useEffect } from 'react';
 import { WebView } from 'react-native-webview';
+import { usePreventScreenCapture } from 'expo-screen-capture';
+
 export default function App() {
+  usePreventScreenCapture();
+
   useEffect(() => {
     const checkForUpdates = async () => {
       try {
