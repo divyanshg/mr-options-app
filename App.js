@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import * as Updates from 'expo-updates';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { WebView } from 'react-native-webview';
 import { usePreventScreenCapture } from 'expo-screen-capture';
 
 export default function App() {
   usePreventScreenCapture();
-
+  const [status, setStatus] = useState({ update: false, fetching: false })
   useEffect(() => {
     const checkForUpdates = async () => {
       try {
